@@ -1,0 +1,799 @@
+{
+  "name": "AI-Powered Social Impact Campaign System",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Digital Detox Week — Reclaim Your Mind",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name"
+            },
+            {
+              "fieldLabel": "Email"
+            },
+            {
+              "fieldLabel": "Age Group",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "18-25"
+                  },
+                  {
+                    "option": "22-30"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Average Daily Screen Time",
+              "fieldType": "number"
+            },
+            {
+              "fieldLabel": "Would you participate in Digital Detox Week?",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "YES"
+                  },
+                  {
+                    "option": "NO"
+                  },
+                  {
+                    "option": "Maybe"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        0
+      ],
+      "id": "539796c1-7e6d-44e0-85d6-401288320293",
+      "name": "On form submission"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "REPLACE_WITH_YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Your Google Sheet"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "REPLACE_WITH_YOUR_SHEET_NAME_OR_GID",
+          "mode": "list",
+          "cachedResultName": "Your sheet tab"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{$json.Name}}",
+            "Age Group": "={{$json[\"Age Group\"]}}",
+            "Average Daily Screen Time": "={{$json[\"Average Daily Screen Time\"]}}",
+            "Participation": "={{$json[\"Would you participate in Digital Detox Week?\"]}}",
+            "Email": "={{$json[\"Email\"]}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Age Group",
+              "displayName": "Age Group",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Average Daily Screen Time",
+              "displayName": "Average Daily Screen Time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Participation",
+              "displayName": "Participation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Response",
+              "displayName": "Response",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        0
+      ],
+      "id": "98a8a1c2-bcea-4728-8dcd-902e000a16d3",
+      "name": "Append row in sheet"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{$json[\"Average Daily Screen Time\"]}}",
+                    "rightValue": 8,
+                    "operator": {
+                      "type": "number",
+                      "operation": "gte"
+                    },
+                    "id": "0bccf1a6-e5b0-4bc3-b30c-5f6ea2ed55b6"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "High Risk"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "eda44054-69f9-4519-9288-0df746b62b9a",
+                    "leftValue": "={{Number($json[\"Average Daily Screen Time\"]) >= 4 && Number($json[\"Average Daily Screen Time\"]) < 8}}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Moderate"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "278bfedc-e372-4425-aa2b-293a1d5786f1",
+                    "leftValue": "={{Number($json[\"Average Daily Screen Time\"]) < 4}}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Low Risk"
+            }
+          ]
+        },
+        "looseTypeValidation": "={{ false }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        -16
+      ],
+      "id": "967d12d3-0012-4d25-8b78-e5767f2f6a0b",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "185bcc1c-08ca-456e-aa24-2bbb0bcb10f3",
+              "name": "Category",
+              "value": "High Risk",
+              "type": "string"
+            },
+            {
+              "id": "692da071-5f0a-4aa0-8a80-c99a8ed0ca22",
+              "name": "Response",
+              "value": "Your screen-time pattern falls into the High Risk category based on the 8+ hour range used in this campaign. Digital Detox Week invites you to notice one automatic screen habit, choose one small boundary, and experiment with what works for you. You can start with one short screen-free period or a focused session with non-essential notifications paused.",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        656,
+        -144
+      ],
+      "id": "0236912d-29e2-4e8f-b59b-ac9e9484b6d2",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9cbaec68-0fe5-454c-b538-d8c4ef47353c",
+              "name": "Category",
+              "value": "Moderate",
+              "type": "string"
+            },
+            {
+              "id": "b4e549c7-55af-4cb5-a766-566291009c0e",
+              "name": "Response",
+              "value": "Your screen-time pattern falls into the Moderate category based on the 4–8 hour range used in this campaign. Digital Detox Week invites you to notice one automatic screen habit, choose one small boundary, and experiment with what works for you. You can start with one focused screen-free period or a short break from non-essential notifications.",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        656,
+        0
+      ],
+      "id": "b77594f9-cc8f-4a46-86df-fb4f18719a4b",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6ee57815-5edd-4e7a-8b04-3d27aa3069b9",
+              "name": "Category",
+              "value": "Low Risk",
+              "type": "string"
+            },
+            {
+              "id": "7347bc68-2e50-490c-9598-cd9a982e626d",
+              "name": "Response",
+              "value": "Your screen-time pattern falls into the Low Risk category based on the below 4-hour range used in this campaign. Digital Detox Week invites you to notice one automatic screen habit, choose one small boundary, and experiment with what works for you. You can try a short screen-free break or pause before opening an app automatically.",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        656,
+        160
+      ],
+      "id": "3176c159-1394-4559-bba8-f9ec65cfe9d0",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "fromEmail": "YOUR_SENDER_EMAIL@example.com",
+        "toEmail": "={{$json[\"Email\"]}}",
+        "subject": "Digital Detox Week — Your Screen-Time Awareness",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        880,
+        -144
+      ],
+      "id": "4a009bd6-bee1-4407-9a9b-bc41dd885ff1",
+      "name": "Send an Email"
+    },
+    {
+      "parameters": {
+        "fromEmail": "YOUR_SENDER_EMAIL@example.com",
+        "toEmail": "={{$json[\"Email\"]}}",
+        "subject": "Digital Detox Week — Your Screen-Time Awareness",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        880,
+        0
+      ],
+      "id": "611493f1-7f11-4a11-b73d-067ed571a034",
+      "name": "Send an Email1"
+    },
+    {
+      "parameters": {
+        "fromEmail": "YOUR_SENDER_EMAIL@example.com",
+        "toEmail": "={{$json[\"Email\"]}}",
+        "subject": "Digital Detox Week — Your Screen-Time Awareness",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        880,
+        160
+      ],
+      "id": "76927ee8-1bf9-4c3a-9feb-b0229efa40c8",
+      "name": "Send an Email2"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "REPLACE_WITH_YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Your Google Sheet"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "REPLACE_WITH_YOUR_SHEET_NAME_OR_GID",
+          "mode": "list",
+          "cachedResultName": "Your sheet tab"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{$node[\"Edit Fields\"].json[\"Name\"]}}",
+            "Email": "={{$node[\"Edit Fields\"].json[\"Email\"]}}",
+            "Category": "={{$node[\"Edit Fields\"].json[\"Category\"]}}",
+            "Timestamp": "={{$now}}",
+            "Action Taken": "Email Sent"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Action Taken",
+              "displayName": "Action Taken",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1104,
+        -144
+      ],
+      "id": "ce1b89e2-8e0f-492d-8eea-dc868a8a93b4",
+      "name": "Append row in sheet1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "REPLACE_WITH_YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Your Google Sheet"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "REPLACE_WITH_YOUR_SHEET_NAME_OR_GID",
+          "mode": "list",
+          "cachedResultName": "Your sheet tab"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{$node[\"Edit Fields1\"].json[\"Name\"]}}",
+            "Email": "={{$node[\"Edit Fields1\"].json[\"Email\"]}}",
+            "Category": "={{$node[\"Edit Fields1\"].json[\"Category\"]}}",
+            "Action Taken": "Email Sent",
+            "Timestamp": "={{$now}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Action Taken",
+              "displayName": "Action Taken",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1104,
+        0
+      ],
+      "id": "9c820794-dccc-41e5-9d0b-772620671fcf",
+      "name": "Append row in sheet2"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "REPLACE_WITH_YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Your Google Sheet"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "REPLACE_WITH_YOUR_SHEET_NAME_OR_GID",
+          "mode": "list",
+          "cachedResultName": "Your sheet tab"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{$node[\"Edit Fields2\"].json[\"Name\"]}}",
+            "Email": "={{$node[\"Edit Fields2\"].json[\"Email\"]}}",
+            "Category": "={{$node[\"Edit Fields2\"].json[\"Category\"]}}",
+            "Action Taken": "Email Sent",
+            "Timestamp": "={{$now}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Action Taken",
+              "displayName": "Action Taken",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1104,
+        160
+      ],
+      "id": "da15a15e-9e70-4fdf-a3ce-ca72a848871b",
+      "name": "Append row in sheet3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Send an Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Send an Email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Send an Email2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send an Email": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send an Email1": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send an Email2": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "nodeGroups": [],
+  "tags": []
+}
